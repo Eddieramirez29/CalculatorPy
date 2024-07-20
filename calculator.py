@@ -1,18 +1,49 @@
 import tkinter as tk
+import re  # Para usar la función "re.split()"
 
 # Crear una instancia de la ventana principal
 root = tk.Tk()
 root.title("Ejemplo de Grid en Tkinter")
 
 # Crear un campo de texto
-entry = tk.Entry(root)
-entry.grid(row=0, column=0, columnspan=3, padx=10, pady=10)  # Ubicar en la fila 0, columnas 0 a 2 con relleno
+entry = tk.Entry(root, font=("Arial", 24), justify='right')
+entry.grid(row=0, column=0, columnspan=4, padx=10, pady=10)  # Ubicar en la fila 0, columnas 0 a 2 con relleno
 
 # Función para manejar la acción del botón
-def on_button_click(text):  # "text" es el parámetro
+def on_button_click(text):
     current_text = entry.get()  # Obtener el texto actual del campo de entrada
-    entry.delete(0, tk.END)  # Limpiar el campo de entrada
-    entry.insert(0, current_text + text)  # Agregar el texto del botón al campo de entrada
+    if text == "=":
+        try:
+            partes = re.split(r'(\D)', current_text)  # \D es cualquier carácter que no es un dígito
+
+            if len(partes) >= 3:
+                a = partes[0]  # Variable izquierda
+                b = partes[1]  # Símbolo
+                c = partes[2]  # Variable derecha
+
+                if b == "+":
+                    resultado = float(a) + float(c)
+                elif b == "-":
+                    resultado = float(a) - float(c)
+                elif b == "*":
+                    resultado = float(a) * float(c)
+                elif b == "/":
+                    resultado = float(a) / float(c)
+                else:
+                    resultado = "Error"
+
+                entry.delete(0, tk.END)  # Limpiar el campo de entrada
+                entry.insert(0, str(resultado))  # Mostrar el resultado
+            else:
+                entry.delete(0, tk.END)
+                entry.insert(0, "Error")
+        except Exception as e:
+            entry.delete(0, tk.END)
+            entry.insert(0, "Error")
+    elif text == "DEL":
+        entry.delete(len(current_text) - 1, tk.END)
+    else:
+        entry.insert(tk.END, text)
 
 # Crear botones usando grid
 button7 = tk.Button(root, text="7", command=lambda: on_button_click("7"))  # "7" es el argumento
@@ -63,8 +94,8 @@ buttonPlus.grid(row=4, column=2, padx=5, pady=5)  # Ubicar en la fila 4, columna
 buttonMinus = tk.Button(root, text="-", command=lambda: on_button_click("-"))  # "-" es el argumento
 buttonMinus.grid(row=4, column=3, padx=5, pady=5)  # Ubicar en la fila 4, columna 3 con relleno
 
-buttonEqual = tk.Button(root, text="=", command=lambda: on_button_click("="))  # "-" es el argumento
-buttonEqual.grid(row=5, column=1, padx=5, pady=5)  # Ubicar en la fila 4, columna 3 con relleno
+buttonEqual = tk.Button(root, text="=", command=lambda: on_button_click("="))  # "=" es el argumento
+buttonEqual.grid(row=5, column=1, columnspan=2, padx=5, pady=5)  # Ubicar en la fila 5, columnas 1 a 2 con relleno
 
 # Ejecutar el bucle principal de la ventana
 root.mainloop()
