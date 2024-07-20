@@ -3,7 +3,7 @@ import re  # To use the "re.split()" function
 
 # Create an instance of the main window
 root = tk.Tk()
-root.title("Example of Grid in Tkinter")
+root.title("Basic Calculator In Tkinter")
 
 # Create a text field
 entry = tk.Entry(root, font=("Arial", 24), justify='right')
